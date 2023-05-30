@@ -5,20 +5,30 @@ from typing import Optional
 
 app = FastAPI()
 
+class ProfileInfo(BaseModel):
+    short_description: str
+    long_bio: str
+
 class User(BaseModel):
     username: str
-    short_description: str
+    profile_info: ProfileInfo
     liked_posts: Optional[list[int]] = None
 
 
 def get_user_info() -> User:
-    content = {
-        "username" : 1.54,
+    profile_info = {
         "short_description" : "The bio description",
+        "long_bio" : "This is our longer bio"
+    }
+    profile_info = ProfileInfo(**profile_info)
+
+    user_content = {
+        "username" : "Username",
+        "profile_info" : profile_info,
         "liked_posts" : None
     }
 
-    return User(**content)
+    return User(**user_content)
 
 
 @app.get("/user/me", response_model=User)
